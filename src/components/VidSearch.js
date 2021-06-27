@@ -1,6 +1,7 @@
 import React from "react"
 
 import StreamerSelector from './StreamerSelector.js'
+import GameSelector from './GameSelector.js'
 
 class VidSearch extends React.Component {
 
@@ -24,13 +25,10 @@ class VidSearch extends React.Component {
           // Get streamers a user follows
           // Request a game to search for
 
-          //Alternatively
-
-          // Request a streamer whose videos you want to search
-          // Display stats about their games
-          // Request a game to search for videos of
+          // <StreamerSelector user_token={this.props.user_token} user_id={this.state.user_id} />
         <div>
-            <StreamerSelector user_token={this.props.user_token} user_id={this.state.user_id} />
+            <GameSelector user_token={this.props.user_token} user_id={this.state.user_id} />
+
         </div>
       )
     }

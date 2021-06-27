@@ -1,91 +1,50 @@
 import React from "react"
-import Grid from '@material-ui/core/Grid'
-import {GridList, GridListTile, GridListTileBar, TextField} from '@material-ui/core'
+import {Button} from '@material-ui/core'
+
+import StreamerDisplay from './StreamerDisplay.js'
+import GameSearch from "./GameSearch.js";
 
 class StreamerSelector extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            user_following: null,
-            follow_data: null,
-            isLoaded: false,
-            selected_streamer: '',
+            streamer: null
         }
       }
 
-    componentDidMount() {
-        var api_url = 'https://api.twitch.tv/helix/users/follows'
-        api_url += "?first=100&from_id=" + this.props.user_id
-
-        var request = {
-            headers: {
-                'Authorization': 'Bearer ' + this.props.user_token,
-                'Client-Id': window.CLIENT_ID
-            }
-        }
-
-        // TODO paginate for >100 results
-        fetch(api_url, request)
-          .then(res => res.json())
-          .then(
-              (result) => result.data )
-          .then((user_data) => {
-            var user_ids = user_data.map((data) => data.to_id)
-            console.log(user_ids)
-
-            var api_url = 'https://api.twitch.tv/helix/users/?id='
-            let id_string = user_ids.join('&id=')
-            fetch(api_url + id_string, request)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                console.log(result.data)
-                this.setState({follow_data: result.data,
-                                isLoaded: true})
-                })
-          })
-
-
-
-
-
+    handleStreamerSelected(value){
+        // There's probably a cleaner way to do this
+        console.log(value.target.dataset)
+        this.setState({streamer: value.target.dataset.name})
+        this.setState({streamer_id: value.target.dataset.id})
     }
 
-    onChangeHandler(e){
-        this.setState({selected_streamer: e.target.value})
+    handleUnselectStreamer(e){
+        this.setState({streamer: null})
     }
 
     render(){
-
-        if (! this.state.isLoaded){
-            return <p> StreamerSelector</p>
+        if(this.state.streamer){
+            return (
+                <GameSearch
+                   unselectStreamer={this.handleUnselectStreamer}
+                   user_token={this.props.user_token}
+                   streamer={this.state.streamer}
+                   streamer_id={this.state.streamer_id}
+                   parent={this}
+                />
+            )
         }
         else{
-        const elements=this.state.follow_data
-          .filter(data => this.state.selected_streamer === '' || data.login.includes(this.state.selected_streamer))
-          .map((data,id)=>{
-            return (
-            // TODO center justify, handle responsive scaling
-            // TODO center name in title bar, make title bar thinner
-            <GridListTile item xs={4} sm={2} md={1} key={data.login}>
-              <img class="responsive-img" src={data.profile_image_url} alt={data.login} />
-              <GridListTileBar title={data.login}/>
-            </GridListTile>
-
+            return(
+                <StreamerDisplay
+                  user_token={this.props.user_token}
+                  user_id={this.props.user_id}
+                  onStreamerSelected={this.handleStreamerSelected.bind(this)} />
             )
-          })
-
-        return (
-            <div id="StreamSelector">
-            <h2> Select a streamer</h2>
-            <TextField id="outlined-basic" label="Streamer Name" onChange={this.onChangeHandler.bind(this)} variant="outlined" />
-            <GridList container spacing={1} cellHeight="150" cols="12">{elements} </GridList>
-            </div>
-        )
         }
-
     }
-  }
+}
 
 export default StreamerSelector;
