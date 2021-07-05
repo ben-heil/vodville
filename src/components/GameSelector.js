@@ -85,10 +85,7 @@ class GameSelector extends React.Component {
     }
 
     render(){
-        console.log(this.state.game)
-        console.log(this.state.game_id)
         if (! this.state.isLoaded){
-            console.log('Gameselect')
             return (
                 <div>
                     <p> GameSelector </p>
