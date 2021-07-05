@@ -1,4 +1,5 @@
 import React from 'react'
+import VideoTile from './VideoTile.js'
 
 class VideoDisplay extends React.Component {
     constructor(props) {
@@ -49,17 +50,6 @@ class VideoDisplay extends React.Component {
                                         isLoaded: true})
                         })
                 })
-            // Get the videos for the followed users
-            // .then((result) =>{
-            //     this.state.follow_data.map(user =>
-            //     {
-            //         // TODO post retreat:
-            //         // get videos for game for user
-            //         // create object with user string, videos array
-            //         // return object?
-            //     }
-            //     )
-            // })
 
         var api_url = "https://api.twitch.tv/helix/games"
     }
@@ -70,7 +60,12 @@ class VideoDisplay extends React.Component {
             return <p>VideoDisplay</p>
         }
         else{
-            return <p>TODO Post Retreat:</p>
+            return <VideoTile
+                        game_id='todo'
+                        streamer_id='todo'
+                        user_id={this.props.user_id}
+                        user_token={this.props.user_token}
+                    />
         }
 
 
